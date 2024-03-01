@@ -18,7 +18,7 @@ iters = zeros([maxIter size(a0)]);
 n = size(a0, 1);
 ak = a0;
 ck = zeros(size(ak));
-dk = zeros(size(ak));
+dk = zeros([9 1]);
 
 for i = 1:maxIter
   akp1 = proxf(ck, 1);

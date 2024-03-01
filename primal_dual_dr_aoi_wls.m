@@ -1,11 +1,12 @@
-function [xStar, iters, alphas] = primal_dual_dr_aoi_wls(x0,proxf,proxgconj)
+function [xStar, iters, alphas] = primal_dual_dr_aoi_wls(x0,proxf,proxgconj, tau)
 
 %%% parameters
 alpha_bar = 0.5; % alpha_bar
-gamma = 0.1; % gamma for prox operators
+gamma = 10; % gamma for prox operators
 eps = 0.03; % eps for (1 - eps) || rbar_k || in linesearch
 tol = 1e-7; % tolerance for exit criterion
 alpha_change = 1/1.4; % factor for change in alpha during linesearch
+
 
 Rf = @(phi) 2*proxf(phi, gamma) - phi;
 Rgconj = @(phi) 2*proxgconj(phi, gamma) - phi;
@@ -32,7 +33,7 @@ for i = 1:maxIter
   subiter = 0;
   while true
     subiter = subiter + 1;
-    %fprintf('subiter %d\n', subiter);
+    fprintf('subiter %d\n', subiter);
     xkp1 = xk + alpha_k*rk;
     rkp1 = S(xkp1) - xkp1;
     if norm(rkp1) < (1-eps)*norm(rk_bar)

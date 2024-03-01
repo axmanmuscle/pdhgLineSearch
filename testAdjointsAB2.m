@@ -1,12 +1,14 @@
 function testAdjointsAB2()
 
-%% This is borked right now
+rng(20240229);
 n = 256;
 sImg = [n n];
-sFSR = [32 32];
+sFSR = [16 16];
 
-idx = randi(prod(sImg), [17000, 1]);
-id2 = sort(unique(idx));
+% idx = randi(prod(sImg), [17000, 1]);
+% id2 = sort(unique(idx));
+load('ukinxs.mat', 'unknownIndxs')
+id2 = unknownIndxs;
 nt = numel(id2);
 wavSplit = makeWavSplit(sImg);
 
@@ -35,7 +37,7 @@ lmask = mask == 1;
   else
     WhIn = iwtDaubechies2( in, wavSplit );
     kPF = testB_2( WhIn, sFSR, mask, 'phases', phases, 'op', 'transp' );
-    out = kPF( id2 );
+    out = kPF;
   end
   end
 
@@ -44,7 +46,8 @@ testx = randn([nt 1]);
 
 [~, phaseimgx] = testA(x, sFSR);
 
-phases = angle(phaseimgx);
+phases1 = angle(phaseimgx);
+phases = phases1;
 
 dotprod1 = @(x, y) real( y(:)' * x(:));
 
@@ -63,10 +66,10 @@ Lt = @(in) in(id2);
 % dotprod1(x, A(y, 'transp'))
 
 Ax = ta(testx);
-Atx = ta(x, 'transp');
+Atx1 = ta(x, 'transp');
 
-Bx = tb(testx);
-Btx = tb(x, 'transp');
+Bx = tb(x);
+Btx1 = tb(x, 'transp');
 
 % %%% <Ax, x> = <x, Atx>
 % %%% have to recompute Atx with x's phase
@@ -83,11 +86,11 @@ Btx = tb(x, 'transp');
 % [AAtx, AAtxphase] = testA(Atx, sFSR, 'phases', phasex);
 % [BBtx, BBtxphase] = testB(Btx, sFSR, 'phases', phasex);
 
-AAtx = ta(Atx);
-BBtx = tb(Btx);
+AAtx1 = ta(Atx1);
+BBtx1 = tb(Btx1);
 
-norm(AAtx + BBtx - 8*x / (n*n))
-test1 = AAtx + BBtx;
+norm(AAtx1 + BBtx1 - 8*x / (n*n))
+test1 = AAtx1 + BBtx1;
 test1 ./ x
 
 

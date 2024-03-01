@@ -3,6 +3,7 @@
 % kData = d2;
 load('ankle.mat')
 kData = d1;
+rng(202402291);
 
 kData = kData./max(abs(kData(:)));
 
@@ -29,8 +30,8 @@ csRecons = cell(1,1,8);
 pfRecons = cell(1,1,8);
 cspfRecons = cell(1,1,8);
 linesearchRecons = cell(1,1,8);
-% parfor coilIdx = 1:8
 for coilIdx = 1:8
+%for coilIdx = 1:8
   
   coilData = fftSamples_wavACR(:,:,coilIdx);
   fftSamples_wavACR_pf = coilData;
@@ -39,13 +40,13 @@ for coilIdx = 1:8
 
   [~,phaseImg] = mri_reconPartialFourier( fftSamples_wavACR_pf, sFSR );
   phases = angle( phaseImg );
-%   pfRecons{1,1,coilIdx} = mri_reconPartialFourier( fftSamples_wavACR_pf, sFSR, 'phases', phases );
-%   csRecons{1,1,coilIdx} = mri_reconCSWithPDHG( fftSamples_wavACR_pf, 'wavSplit', wavSplit );
-%   cspfRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
+  % pfRecons{1,1,coilIdx} = mri_reconPartialFourier( fftSamples_wavACR_pf, sFSR, 'phases', phases );
+  % csRecons{1,1,coilIdx} = mri_reconCSWithPDHG( fftSamples_wavACR_pf, 'wavSplit', wavSplit );
+  % cspfRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
   linesearchRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG_WLS( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
 end
-csRecons = cell2mat( csRecons );  csRecon = mri_reconRoemer( csRecons );
-pfRecons = cell2mat( pfRecons );  pfRecon = mri_reconRoemer( pfRecons );
+% csRecons = cell2mat( csRecons );  csRecon = mri_reconRoemer( csRecons );
+% pfRecons = cell2mat( pfRecons );  pfRecon = mri_reconRoemer( pfRecons );
 cspfRecons = cell2mat( cspfRecons );  cspfRecon = mri_reconRoemer( cspfRecons );
 linesearchRecons = cell2mat( linesearchRecons ); linesearchRecon = mri_reconRoemer( linesearchRecons );
 
@@ -53,8 +54,8 @@ linesearchRecons = cell2mat( linesearchRecons ); linesearchRecon = mri_reconRoem
 % figure; imshowscale(abs(fftSamples_wavACR_pf) > 0);
 % figure; imshowscale(abs(csRecon)); title('cs')
 % figure; imshowscale(abs(pfRecon));  title('pf')
-% figure; imshowscale(abs(cspfRecon)); title('cspf')
+figure; imshowscale(abs(cspfRecon)); title('cspf')
 figure; imshowscale(abs(linesearchRecon)); title('line search')
 
-absdiff = abs(cspfRecon - csRecon);
+absdiff = abs(linesearchRecon - cspfRecon);
 figure; imshowscale(absdiff);
