@@ -7,6 +7,8 @@ rng(202402291);
 
 kData = kData./max(abs(kData(:)));
 
+pfSamples = kData;
+
 sImg = size( kData, (1:2) );
 
 vdSigFrac = 0.3;
@@ -32,18 +34,21 @@ cspfRecons = cell(1,1,8);
 linesearchRecons = cell(1,1,8);
 for coilIdx = 1:8
 %for coilIdx = 1:8
-  
+  pfData = pfSamples(:, :, coilIdx);
   coilData = fftSamples_wavACR(:,:,coilIdx);
   fftSamples_wavACR_pf = coilData;
+%   fftSamples_wavACR_pf = pfData;
   fftSamples_wavACR_pf( ceil( sImg(1) / 2 ) + round( sFSR(1) / 2 ) : end, : ) = 0;
-  fftSamples_wavACR_pf( fsr > 0 ) = coilData( fsr > 0 );
+  fftSamples_wavACR_pf( fsr > 0 ) = pfData( fsr > 0 );
 
   [~,phaseImg] = mri_reconPartialFourier( fftSamples_wavACR_pf, sFSR );
   phases = angle( phaseImg );
+%   pfRecons{1,1,coilIdx} = mri_reconPFHomodyne(fftSamples_wavACR_pf, sFSR, 'phases', phases);
   % pfRecons{1,1,coilIdx} = mri_reconPartialFourier( fftSamples_wavACR_pf, sFSR, 'phases', phases );
   % csRecons{1,1,coilIdx} = mri_reconCSWithPDHG( fftSamples_wavACR_pf, 'wavSplit', wavSplit );
   % cspfRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
-  linesearchRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG_WLS( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
+%   linesearchRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG_WLS( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
+  linesearchRecons{1,1,coilIdx} = mri_reconCSPFHomodyne( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
 end
 % csRecons = cell2mat( csRecons );  csRecon = mri_reconRoemer( csRecons );
 % pfRecons = cell2mat( pfRecons );  pfRecon = mri_reconRoemer( pfRecons );

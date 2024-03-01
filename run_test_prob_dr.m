@@ -34,7 +34,7 @@ x0 = [-20;-10;-30;zeros([9 1])];
 [xStar2, driters] = primal_dual_dr(x0, pf, pgtildestar);
 [xStar3, dr2iters] = primal_dual_dr_2(x0, pf, pgtildestar);
 [xStar4, aoiiters] = primal_dual_dr_aoi(x0, pf, pgtildestar);
-[xStar6, aoiiters2, alphas] = primal_dual_dr_aoi_wls(x0, pf, pg3);
+[xStar6, aoiiters2, alphas] = primal_dual_dr_aoi_wls(x0, pf, pg3, f, g, 300);
 
 pfnew = @(x, t) proxF(x(1:n), b, eps);
 [xStarpdhg, objvals, reldiffs] = pdhg(x0(1:3), pfnew, pgstar, tau, 'A', A, ...
