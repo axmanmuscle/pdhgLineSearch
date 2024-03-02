@@ -46,7 +46,7 @@ phases = angle( phaseImg );
     ramp( lastY : end ) = 2;
     ramp = 2 - ramp;
     ramp2 = ramp.*ramp;
-    ramp3 = bsxfun(@times, mask, ramp2);
+    ramp3 = bsxfun(@times, unknownMask, ramp2);
     alpha = 1/8;
     nramp = size(ramp);
     bramp = (1/alpha) *ones(nramp) - ramp3;
@@ -129,7 +129,7 @@ BTk = applyB(testx, 'transp');
 BBTk = applyB(BTk);
 
 test1 = AATk + BBTk;
-test1 ./ testx
+testratio = test1 ./ testx;
 
 
 img0 = fftshift2( ifft2( ifftshift2( kData ) ) );
@@ -155,12 +155,18 @@ sigma_pdhg = 0.95 / normA;
 %     'sigma', sigma_pdhg, 'A', @applyA, 'f', @f, 'g', @g, 'N', 1000, 'normA', normA, 'printEvery', 50, ...
 %     'verbose', true, 'tol', [] );
 
-% xStar = douglasRachford(x0, @proxftilde, @proxgtilde, 1, 'verbose', true);
-% xStar = primal_dual_dr_2(x0, @proxftilde, @proxgtildeconj);
+xStar1 = douglasRachford(x0, @proxftilde, @proxgtilde, 1, 'verbose', true);
+xStar2 = primal_dual_dr_2(x0, @proxftilde, @proxgtildeconj);
 xStar = primal_dual_dr_aoi_wls(x0, @proxftilde, @proxgtildeconj, @ftilde, @gtilde, maxIter);
 
 out = kData;
 out(unknownIndxs) = xStar(1:n);
+
+out1 = kData;
+out1(unknownIndxs) = xStar1(1:n);
+
+out2 = kData;
+out2(unknownIndxs) = xStar2(1:n);
 
 recon = mri_reconPFHomodyne(out, sFSR, 'phases', phases);
 
