@@ -143,7 +143,7 @@ n = numel(k0);
 z0 = zeros(n0);
 
 theta = 8/prod(sImg);
-
+k0 = randn(size(k0)) + 1i*randn(size(k0));
 x0 = [k0; z0(:)];
 maxIter = 10;
 
@@ -155,9 +155,11 @@ sigma_pdhg = 0.95 / normA;
 %     'sigma', sigma_pdhg, 'A', @applyA, 'f', @f, 'g', @g, 'N', 1000, 'normA', normA, 'printEvery', 50, ...
 %     'verbose', true, 'tol', [] );
 
-xStar1 = douglasRachford(x0, @proxftilde, @proxgtilde, 1, 'verbose', true);
-xStar2 = primal_dual_dr_2(x0, @proxftilde, @proxgtildeconj);
-xStar = primal_dual_dr_aoi_wls(x0, @proxftilde, @proxgtildeconj, @ftilde, @gtilde, maxIter);
+[xStar_drwls, iters1, alphas1] = dr_wLS(x0, @proxftilde, @proxgtilde, maxIter);
+% xStar1 = douglasRachford(x0, @proxftilde, @proxgtilde, 1, 'verbose', true);
+[xStar2, iters2] = primal_dual_dr_2(x0, @proxftilde, @proxgtildeconj);
+[xStar3, iters3] = primal_dual_dr_aoi(x0, @proxftilde, @proxgtildeconj);
+[xStar, iters, alphas, objVals] = primal_dual_dr_aoi_wls(x0, @proxftilde, @proxgtildeconj, @ftilde, @gtilde, maxIter);
 
 out = kData;
 out(unknownIndxs) = xStar(1:n);

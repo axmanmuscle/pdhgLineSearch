@@ -62,7 +62,7 @@ alpha_change = 1/1.4; % factor for change in alpha during linesearch
 
 S = @(x) Rg( Rf( x, gamma ), gamma );
 
-iters = zeros(maxIter, 1);
+iters = zeros(maxIter, size(x0, 1));
 alphas = zeros(maxIter, 1);
 
 xk = x0;
@@ -75,7 +75,7 @@ for i = 1:maxIter
   xk_bar = xk + alpha_bar*rk;
   rk_bar = S(xk_bar) - xk_bar;
 
-  iters(i) = norm(rk);
+  % iters(i) = norm(rk);
 %   if norm(rk) < tol
 %     break
 %   end
@@ -100,6 +100,7 @@ for i = 1:maxIter
       alphas(i) = alpha_k;
       break
     end
+    iters(i, :) = xk;
   end
 
   xstar = xk;
