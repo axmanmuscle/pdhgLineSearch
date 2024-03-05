@@ -50,7 +50,7 @@ end
 x = x0;
 for optIter = 1 : N
     rk = S(x) - x;
-    x_bar = x + alpha_bar*x;
+    x_bar = x + alpha_bar*rk;
     rk_bar = S(x_bar) - x_bar;
 
     alpha_k = 50;
