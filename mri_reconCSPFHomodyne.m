@@ -76,7 +76,7 @@ phases = angle( phaseImg );
   end
 
   function out = g(in)
-    out = norm(in + PsiPb, 1);
+    out = norm(in(:) + PsiPb(:), 1);
   end
 
   function out = gtilde(in)
@@ -164,11 +164,11 @@ sigma_pdhg = 0.95 / normA;
 out = kData;
 out(unknownIndxs) = xStar(1:n);
 
-out1 = kData;
-out1(unknownIndxs) = xStar1(1:n);
-
-out2 = kData;
-out2(unknownIndxs) = xStar2(1:n);
+% out1 = kData;
+% out1(unknownIndxs) = xStar1(1:n);
+% 
+% out2 = kData;
+% out2(unknownIndxs) = xStar2(1:n);
 
 recon = mri_reconPFHomodyne(out, sFSR, 'phases', phases);
 

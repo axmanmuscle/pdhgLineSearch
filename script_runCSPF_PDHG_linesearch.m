@@ -48,7 +48,9 @@ for coilIdx = 1:8
   % csRecons{1,1,coilIdx} = mri_reconCSWithPDHG( fftSamples_wavACR_pf, 'wavSplit', wavSplit );
   % cspfRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
 %   linesearchRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG_WLS( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
-  linesearchRecons{1,1,coilIdx} = mri_reconCSPFHomodyne( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
+  %t1 = mri_reconCSPFHomodyne( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
+  t2 = mri_reconCSPFHomodyne_nick( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp'  );
+  t3 = mri_reconCSPFHomodyne_nick( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp_wls'  );
 end
 % csRecons = cell2mat( csRecons );  csRecon = mri_reconRoemer( csRecons );
 % pfRecons = cell2mat( pfRecons );  pfRecon = mri_reconRoemer( pfRecons );
