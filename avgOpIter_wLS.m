@@ -59,7 +59,7 @@ for optIter = 1 : N
         subiter = subiter + 1;
         % fprintf('subiter %d\n', subiter);
         xkp1 = x + alpha_k*rk;
-        rkp1 = S(x) - x;
+        rkp1 = S(xkp1) - xkp1;
         if norm(rkp1) < (1-eps)*norm(rk_bar)
             x = xkp1;
             break
