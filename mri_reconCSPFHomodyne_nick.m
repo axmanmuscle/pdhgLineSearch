@@ -171,24 +171,26 @@ function recon =  mri_reconCSPFHomodyne_nick(kData, sFSR, varargin )
   switch alg
 
     case 'douglasRachford'
-      [xStar,objValues] = douglasRachford( x0, @proxf_tilde, @proxg_tilde, 1d-3, 'N', 100, ...
+      [xStar,objValues] = douglasRachford( x0, @proxf_tilde, @proxg_tilde, 1d-3, 'N', 200, ...
         'verbose', true, 'printEvery', 10, 'f', @f_tilde, 'g', @g_tilde);   %#ok<ASGLU>
 
     case 'douglasRachford_avgOp'
-      [xStar] = avgOpIter( x0, @S_DR, 'alpha', 0.5, 'N', 2000, ...
-        'verbose', true );
+      objF = @(x) f( proxf_tilde(x) ) + g( proxf_tilde(x) );
+      [xStar] = avgOpIter( x0, @S_DR, 'alpha', 0.5, 'N', 1000, ...
+        'verbose', true, 'objFunction', objF );
 
     case 'primalDualDR'
-      [xStar, objValues] = primalDualDR( x0, @proxf_tilde, @proxg_tildeConj, 1d-3, 'N', 2000, ...
+      [xStar, objValues] = primalDualDR( x0, @proxf_tilde, @proxg_tildeConj, 1d-3, 'N', 1000, ...
         'verbose', true, 'f', @f_tilde, 'g', @g_tilde );   %#ok<ASGLU>
 
     case 'primalDualDR_avgOp'
-      [xStar] = avgOpIter( x0, @S_pdDR, 'alpha', 0.5, 'N', 150, ...
+      [xStar] = avgOpIter( x0, @S_pdDR, 'alpha', 0.5, 'N', 1000, ...
         'verbose', true, 'objFunction', @g_tilde );
 
       case 'primalDualDR_avgOp_wls'
-      [xStar] = avgOpIter_wLS( x0, @S_pdDR, 'N', 150, ...
-        'verbose', true, 'objFunction', @g_tilde );
+      objF = @(x) f_tilde( proxf_tilde(x) ) + g_tilde( proxf_tilde(x) );
+      [xStar,objValues2,alphas] = avgOpIter_wLS( x0, @S_pdDR, 'N', 20, ...
+        'verbose', true, 'printEvery', 1, 'objFunction', objF );
 
     otherwise
       error( 'Unrecognized algorithm' );
