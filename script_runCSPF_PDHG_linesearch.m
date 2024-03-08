@@ -32,7 +32,7 @@ csRecons = cell(1,1,8);
 pfRecons = cell(1,1,8);
 cspfRecons = cell(1,1,8);
 linesearchRecons = cell(1,1,8);
-for coilIdx = 1:8
+parfor coilIdx = 1:8
 %for coilIdx = 1:8
   pfData = pfSamples(:, :, coilIdx);
   coilData = fftSamples_wavACR(:,:,coilIdx);
@@ -46,11 +46,11 @@ for coilIdx = 1:8
 %   pfRecons{1,1,coilIdx} = mri_reconPFHomodyne(fftSamples_wavACR_pf, sFSR, 'phases', phases);
   % pfRecons{1,1,coilIdx} = mri_reconPartialFourier( fftSamples_wavACR_pf, sFSR, 'phases', phases );
   % csRecons{1,1,coilIdx} = mri_reconCSWithPDHG( fftSamples_wavACR_pf, 'wavSplit', wavSplit );
-  % cspfRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
+  cspfRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
 %   linesearchRecons{1,1,coilIdx} = mri_reconCSPFWithPDHG_WLS( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
   %t1 = mri_reconCSPFHomodyne( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit  );
-  t1 = mri_reconCSPFHomodyne_alex_pdhg( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp_wls'  );
-  t2 = mri_reconCSPFHomodyne_alex_pdhg( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'pdhg_avgOp_wls'  );
+  %linesearchRecons{1,1,coilIdx} = mri_reconCSPFHomodyne_alex_pdhg( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp_wls'  );
+  linesearchRecons{1,1,coilIdx} = mri_reconCSPFHomodyne_alex_pdhg( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'pdhg_avgOp_wls'  );
   
 end
 % csRecons = cell2mat( csRecons );  csRecon = mri_reconRoemer( csRecons );
