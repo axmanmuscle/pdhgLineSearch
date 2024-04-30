@@ -1,8 +1,8 @@
 % load('kData_knee.mat', 'kData');
-% load('brain.mat', 'd2');
-% kData = d2;
-load('ankle.mat')
-kData = d1;
+load('brain.mat', 'd2');
+kData = d2;
+% load('ankle.mat')
+% kData = d1;
 
 kData = kData./max(abs(kData(:)));
 

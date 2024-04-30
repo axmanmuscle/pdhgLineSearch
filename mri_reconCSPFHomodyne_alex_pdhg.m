@@ -176,7 +176,19 @@ function recon =  mri_reconCSPFHomodyne_alex_pdhg(kData, sFSR, varargin )
         out = t1 - 2*gamma*applyAB(t3, 'transp');
 
     end
-
+    % 
+    % for i = 1:20
+    %     n1 = nUnknown + nMask;
+    %     xtest = randn(n1, 1);
+    %     ytest = randn(n1, 1);
+    % 
+    %     ns = norm(S_pdDR(xtest) - S_pdDR(ytest));
+    %     nx = norm(xtest - ytest);
+    %     if ns > nx
+    %         error('problem with S_pddr is not nonexpansive')
+    %     end
+    % 
+    % end
 
   img0 = fftshift2( ifft2( ifftshift2( kData ) ) );
   x0 = wtDaubechies2( img0, wavSplit );
