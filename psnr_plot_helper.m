@@ -218,12 +218,12 @@ function [recon, objValues] =  psnr_plot_helper(kData, sFSR, varargin )
     case 'primalDualDR_avgOp'
       pddrAvgOpObjF = @(x) g_tilde( proxf_tilde( x ) );
       [xStar,objValues] = avgOpIter( x0, @S_pdDR, 'alpha', 0.5, 'N', iters, ...
-        'objFunction', pddrAvgOpObjF, 'verbose', true, 'printEvery', printEvery );
+        'objFunction', pddrAvgOpObjF, 'verbose', true, 'printEvery', 100 );
 
     case 'primalDualDR_avgOp_wls'
       objF = @(x) f_tilde( proxf_tilde(x) ) + g_tilde( proxf_tilde(x) );
       [xStar,objValues,alphas] = avgOpIter_wLS( x0, @S_pdDR, 'N', iters, ...
-        'objFunction', objF, 'verbose', true, 'printEvery', 1, 'doLineSearchTest', true );   %#ok<ASGLU>
+        'objFunction', objF, 'verbose', true, 'printEvery', 100, 'doLineSearchTest', true );   %#ok<ASGLU>
 
     otherwise
       error( 'Unrecognized algorithm' );

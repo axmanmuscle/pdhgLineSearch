@@ -3,7 +3,7 @@ load('brain.mat', 'd2');
 kData = d2;
 % load('ankle.mat')
 % kData = d1;
-rng(202402291);
+rng(20240429);
 
 kData = kData./max(abs(kData(:)));
 
@@ -34,13 +34,14 @@ cspfRecons = cell(1,1,8);
 linesearchRecons = cell(1,1,8);
 parfor coilIdx = 1:8
 % for coilIdx = 1:8
-  pfData = pfSamples(:, :, coilIdx);
+  % pfData = pfSamples(:, :, coilIdx);
   coilData = fftSamples_wavACR(:,:,coilIdx);
   fftSamples_wavACR_pf = coilData;
 %   fftSamples_wavACR_pf = pfData;
   % fftSamples_wavACR( ceil( ( sImg(1) + 1 ) / 2 ) + round( sFSR(1) / 2 ) : end, :, : ) = 0;
-  fftSamples_wavACR_pf( ceil( sImg(1) / 2 ) + round( sFSR(1) / 2 ) : end, : ) = 0;
   fftSamples_wavACR_pf( fsr > 0 ) = pfData( fsr > 0 );
+  fftSamples_wavACR_pf( ceil( sImg(1) / 2 ) + round( sFSR(1) / 2 ) : end, : ) = 0;
+  
 
   [~,phaseImg] = mri_reconPartialFourier( fftSamples_wavACR_pf, sFSR );
   phases = angle( phaseImg );

@@ -26,7 +26,7 @@ wavMaskACR = mri_makeSampleMask( sImg, sum(sampleMask(:)), vdSig, 'startMask', f
 
 fftSamples_wavACR = bsxfun( @times, kData, wavMaskACR );
 
-max_iters = 2500;
+max_iters = 10000;
 
 psnr_no_linesearch = zeros([max_iters, 1]);
 psnr_linesearch = zeros([max_iters, 1]);
