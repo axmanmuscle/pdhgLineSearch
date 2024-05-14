@@ -26,7 +26,7 @@ wavMaskACR = mri_makeSampleMask( sImg, sum(sampleMask(:)), vdSig, 'startMask', f
 
 fftSamples_wavACR = bsxfun( @times, kData, wavMaskACR );
 
-iters = 10000;
+iters = 2000;
 
 max_val = max(gt_recon, [], 'all');
 
@@ -35,8 +35,9 @@ lsObjs = cell(8,1);
 
 cspf_nolsRecons = cell(1,1,8);
 cspf_lsRecons = cell(1,1,8);
+csRecons = cell(1,1,8);
 gamma = 2^-11;
-parfor coilIdx = 1:8
+for coilIdx = 1:8
 
     coilData = fftSamples_wavACR(:,:,coilIdx);
     fftSamples_wavACR_pf = coilData;
@@ -45,7 +46,8 @@ parfor coilIdx = 1:8
     
     [~,phaseImg] = mri_reconPartialFourier( fftSamples_wavACR_pf, sFSR );
     phases = angle( phaseImg );
-    [nolsRecon, nolsObj] = psnr_plot_helper( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp', 'N', iters, 'gamma', gamma  );
+    % csRecons{1,1,coilIdx} = mri_reconCSWithPDHG( fftSamples_wavACR_pf, 'wavSplit', wavSplit );
+    % [nolsRecon, nolsObj] = psnr_plot_helper( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp', 'N', iters, 'gamma', gamma  );
     [lsRecon, lsObj] = psnr_plot_helper( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp_wls', 'N', iters, 'gamma', gamma  );
     cspf_nolsRecons{1,1,coilIdx} = nolsRecon;
     cspf_lsRecons{1,1,coilIdx} = lsRecon;
@@ -55,6 +57,7 @@ parfor coilIdx = 1:8
 
 end
 
+csRecons = cell2mat(csRecons); csRecon = mri_reconRoemer(csRecons);
 cspf_nolsRecons = cell2mat( cspf_nolsRecons ); noLinesearchRecon = mri_reconRoemer( cspf_nolsRecons );
 cspf_lsRecons = cell2mat( cspf_lsRecons ); linesearchRecon = mri_reconRoemer( cspf_lsRecons );
 

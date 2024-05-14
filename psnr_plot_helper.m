@@ -222,7 +222,7 @@ function [recon, objValues] =  psnr_plot_helper(kData, sFSR, varargin )
 
     case 'primalDualDR_avgOp_wls'
       objF = @(x) f_tilde( proxf_tilde(x) ) + g_tilde( proxf_tilde(x) );
-      [xStar,objValues,alphas] = avgOpIter_wLS( x0, @S_pdDR, 'N', iters, ...
+      [xStar,objValues,alphas] = avgOpIter_wLS( x0, @S_pdDR, 'N', 100, ...
         'objFunction', objF, 'verbose', true, 'printEvery', 100, 'doLineSearchTest', true );   %#ok<ASGLU>
 
     otherwise
