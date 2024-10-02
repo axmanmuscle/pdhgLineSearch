@@ -42,7 +42,7 @@ fftSamples_wavACR_pf( ceil( sImg(1) / 2 ) + round( sFSR(1) / 2 ) : end, : ) = 0;
 phases = angle( phaseImg );
 
 iters = 5000;
-exps = 6:-1:-6;
+exps = 0:-1:-12;
 n = numel(exps);
 
 nolsObjs = cell(n, 1);
@@ -50,7 +50,7 @@ lsObjs = cell(n, 1);
 % pddrObjs = cell(n, 1);
 
 parfor gexp = 1:n
-    gamma = 10^(exps(gexp));
+    gamma = 2^(exps(gexp));
     % [~, pddrObj] = psnr_plot_helper( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR', 'N', iters, 'gamma', gamma );
     [nolsRecon, nolsObj] = psnr_plot_helper( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp', 'N', iters, 'gamma', gamma );
     [lsRecon, lsObj] = psnr_plot_helper( fftSamples_wavACR_pf, sFSR, 'wavSplit', wavSplit, 'alg', 'primalDualDR_avgOp_wls', 'N', iters, 'gamma', gamma );
@@ -61,7 +61,7 @@ parfor gexp = 1:n
 end
 
 for i = 1:n
-    gamma = 10^(exps(i));
+    gamma = 2^(exps(i));
     lsObjectives = lsObjs{i};
     nolsObjectives = nolsObjs{i};
     % pddrObjectives = pddrObjs{i};

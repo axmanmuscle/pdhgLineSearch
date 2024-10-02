@@ -5,7 +5,7 @@ function [recon, objValues] =  psnr_plot_helper(kData, sFSR, varargin )
   p.addParameter( 'alg', 'douglasRachford' );
   p.addParameter( 'doChecks', false );
   p.addParameter( 'gamma', 1d-2, @ispositive );
-  p.addParameter( 'printEvery', 1, @ispositive );
+  p.addParameter( 'printEvery', 100, @ispositive );
   p.addParameter( 'wavSplit', [], @isnumeric );
   p.addParameter( 'N', 100, @isnumeric);
   p.parse( varargin{:} );
@@ -204,10 +204,10 @@ function [recon, objValues] =  psnr_plot_helper(kData, sFSR, varargin )
         'objFunction', objF, 'verbose', true, 'printEvery', printEvery );
 
     case 'pdhg'
-      tau = gamma;
-      if numel( normA ) == 0, normA = powerIteration( @applyA, rand( size( k0 ) ) ); end
+      normA = powerIteration( @applyA, rand( size( k0 ) ) );
+      tau = 1 / (normA*normA*gamma);
       [kStar,objValues] = pdhg( k0, @proxf, @proxgConj, tau, 'A', @applyA, 'normA', normA, 'sigma', gamma, ...
-        'N', 1000, 'f', @f, 'g', @g, 'verbose', true, 'printEvery', printEvery );
+        'N', iters, 'f', @f, 'g', @g, 'verbose', true, 'printEvery', printEvery );
       xStar = zeros( size( x0 ) );
       xStar( 1 : nUnknown ) = kStar;
 
@@ -222,7 +222,7 @@ function [recon, objValues] =  psnr_plot_helper(kData, sFSR, varargin )
 
     case 'primalDualDR_avgOp_wls'
       objF = @(x) f_tilde( proxf_tilde(x) ) + g_tilde( proxf_tilde(x) );
-      [xStar,objValues,alphas] = avgOpIter_wLS( x0, @S_pdDR, 'N', 100, ...
+      [xStar,objValues,alphas] = avgOpIter_wLS( x0, @S_pdDR, 'N', iters, ...
         'objFunction', objF, 'verbose', true, 'printEvery', 100, 'doLineSearchTest', true );   %#ok<ASGLU>
 
     otherwise

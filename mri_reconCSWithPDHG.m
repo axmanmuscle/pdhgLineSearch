@@ -62,7 +62,7 @@ function out = mri_reconCSWithPDHG( kData, varargin )
   normA = powerIteration( @A, rand( numel( unknownIndxs ), 1 ) );
   tau = 1d-1 / normA;
   [xStar,objValues,relDiffs] = pdhg( zeros( numel( unknownIndxs ), 1 ), @proxf, @proxgConj, tau, ...
-    'A', @A, 'f', @f, 'g', @g, 'N', 1000, 'normA', normA, 'printEvery', 20, 'verbose', true, 'tol', [] );   %#ok<ASGLU>
+    'A', @A, 'f', @f, 'g', @g, 'N', 10000, 'normA', normA, 'printEvery', 20, 'verbose', true, 'tol', [] );   %#ok<ASGLU>
 
   %[xStar,objValues] = pdhgWLS( zeros( numel( unknownIndxs ), 1 ), @proxf, @proxgConj, ...
   %  'N', 10000, 'A', @A, 'beta', 0.1, 'mu', 0.5, 'f', @f, 'g', @g, 'verbose', true );
